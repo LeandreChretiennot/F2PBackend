@@ -20,8 +20,8 @@ router.get("/", (req, res) => {
     res.send("Connection On")
 });
 
+//#region user crud
 router.post("/user", (req, res) => {
-    console.log(req.body);
     crudUser.create(req.body.pseudo, req.body.password)
         .catch(err => {
             res.send(err);
@@ -30,13 +30,26 @@ router.post("/user", (req, res) => {
             res.send(result);
         });
 });
-
+router.get("/user", (req, res) => {
+    crudUser.readOne(req.query).then(result => {
+        console.log(result);
+        res.send(result);
+    });
+});
+router.get("/login", (req, res) => {
+    if (!req.query.pseudo || !req.query.password)
+        res.send();
+    crudUser.readOne(req.query).then(result => {
+        // console.log(result);
+        res.send(result);
+    });
+})
 router.get("/users", (req, res) => {
     crudUser.readAll().then(result => {
         res.send(result);
     });
 });
-
+//#endregion
 
 app.use('/', router)
 app.listen(port, async () => {

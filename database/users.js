@@ -48,6 +48,9 @@ UserSchema.pre('save', function(next) {
 });
 
 UserSchema.methods = {
+    authenticate: function(password) {
+        return bcrypt.compareSync(password, this.hashed_password);
+    },
     encryptPassword: function(password) {
         if (!password) return '';
         try {

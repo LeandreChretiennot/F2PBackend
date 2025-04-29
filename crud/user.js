@@ -15,9 +15,31 @@ const crudUser = {
     },
     readAll: function() {
         return new Promise(resolve => {
-            User.find({}).then(result => {
-                resolve(result);
-            });
+            User.find({})
+                .then(result => {
+                    resolve(result);
+                });
+        })
+    },
+    readOne: function(params) {
+        return new Promise(resolve => {
+            User.findOne({ pseudo: params.pseudo })
+                .then(result => {
+                    if (result && params.password)
+                    {
+                        if (!result.authenticate(params.password))
+                        {
+                            resolve("Password incorect");
+                            return
+                        }
+                        
+                        // result = {
+                        //     _id: result.id,
+                        //     pseudo: result.pseudo
+                        // }
+                    }
+                    resolve(result);
+                })
         })
     }
 }
